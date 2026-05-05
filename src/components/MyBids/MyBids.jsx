@@ -18,37 +18,33 @@ const MyBids = () => {
             }, [user?.email])
 
 
-            const handleDeleteBid = (_id) => {
-                    Swal.fire({
-  title: "Are you sure?",
-  text: "You won't be able to revert this!",
-  icon: "warning",
-  showCancelButton: true,
-  confirmButtonColor: "#3085d6",
-  cancelButtonColor: "#d33",
-  confirmButtonText: "Yes, delete it!"
-}).then((result) => {
-  if (result.isConfirmed) 
-    fetch(`http://localhost:3000/bids/${_id}`, {
-        method: 'DELETE'
-})
-.then(res = res.json())
-.then(data => {
-    if(data.deleteCount){
-               Swal.fire({
-    title: "Deleted!",
-    text: "Your file has been deleted.",
-    icon: "success"
-  });
+const handleDeleteBid = (_id) => {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
 
-//     
-  const remainingBids = bids.filter(bid => bid !== _id);
-  setBids(remainingBids)
-    }
-})
-});
+        if (result.isConfirmed) {
 
-    }
+            fetch(`http://localhost:3000/bids/${_id}`, {
+                method: 'DELETE'
+            })
+            .then(res => res.json())
+            .then(data => {
+
+                if (data.deletedCount) {
+
+                    Swal.fire("Deleted!", "Bid removed", "success");
+
+                    setBids(prev => prev.filter(bid => bid._id !== _id));
+                }
+            });
+        }
+    });
+};
 
     return (
         <div>
